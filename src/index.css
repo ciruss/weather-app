@@ -3,3 +3,82 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+div:empty {
+  display: none;
+}
+
+.location {
+  padding: 15px;
+  cursor: pointer;
+}
+
+.navbar-brand {
+  font-size: 3rem;
+}
+
+.search {
+  padding-top: 10%;
+  margin: auto;
+  width: 50%;
+  text-align: center;
+}
+
+.weather {
+  width: 50%;
+  margin: auto;
+  padding-bottom: 20px;
+}
+
+.forecast {
+  display: flex;
+  overflow: auto;
+  height: 12rem;
+  width: 100%;
+}
+
+.forecast__border {
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: .25rem;
+}
+
+.container {
+  padding-top: 10px;
+  height: 100%;
+}
+
+.container__currentWeather {
+  padding-top: 25px;
+}
+
+.ccard{
+  text-align: center;
+}
+
+.ccard__large {
+  border-radius: .25rem;
+  border: 1px solid rgba(0,0,0,.125);
+  margin: auto;
+  width: 15rem;
+  height: 18rem;
+}
+
+.form-signin__size {
+  width: 15rem;
+  margin: 0 auto;
+  display: inline;
+}
+
+.favorites {
+  padding-top: 15%;
+}
+
+.list-group {
+  width: 30%;
+  margin: auto;
+}
+
+.list-group-item {
+  font-size: 1.5em;
+  height: 4rem;
+}

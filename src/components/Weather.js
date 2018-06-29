@@ -84,9 +84,9 @@ class Weather extends Component {
 		return (
 			<div>
 				{this.state.isHidden ? null :
-					<CurrentWeather 
-						temp={temp} 
-						city={city} 
+					<CurrentWeather
+						temp={temp}
+						city={city}
 						weatherId={weatherId}
 						description={description}
 						wind={wind}

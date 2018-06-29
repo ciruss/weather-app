@@ -11,16 +11,20 @@ class Search extends Component {
 			temp: '',
 			weatherId: '',
 			submit: false,
-			lat: '',
-			lng: '',
+			lat: 0,
+			lng: 0,
 			description: '',
 			wind: '',
 			humidity: '',
+			isMarkerShown: false,
+			dataError: true,
 		};
 
 		this.updateInput = this.updateInput.bind(this);
 		this.getData = this.getData.bind(this);
 		this.getDataByLocation = this.getDataByLocation.bind(this);
+		// this.delayedShowMarker = this.delayedShowMarker.bind(this);
+		this.getLocation = this.getLocation.bind(this);
 	}
 
 	componentWillMount() {
@@ -32,10 +36,39 @@ class Search extends Component {
 		);
 	}
 
+	/* 	componentDidMount() {
+		this.delayedShowMarker();
+	}
+
+	delayedShowMarker() {
+		setTimeout(() => {
+			this.getLocation();
+			this.setState({
+				isMarkerShown: true,
+				submit: true,
+			});
+		}, 1000);
+	} */
+
 	updateInput(e) {
 		this.setState({
 			city: e.target.value
 		});
+	}
+
+	getLocation() {
+		if(navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(
+				position => {
+					this.setState({
+						lat: position.coords.latitude,
+						lng: position.coords.longitude
+					});
+					this.getDataByLocation();
+				});
+		} else {
+			error => console.log(error);
+		}
 	}
 
 	getDataByLocation() {
@@ -55,6 +88,8 @@ class Search extends Component {
 					wind: data.wind.speed,
 					humidity: data.main.humidity,
 					submit: !this.state.submit,
+					isMarkerShown: true,
+					dataError: true
 				});
 			})
 			.catch(error => {
@@ -76,10 +111,15 @@ class Search extends Component {
 				this.setState({
 					temp: data.main.temp,
 					weatherId: data.weather[0].icon,
-					submit: !this.state.submit
+					lat: data.coord.lat,
+					lng: data.coord.lon,
+					submit: !this.state.submit,
+					isMarkerShown: true,
+					dataError: true
 				});
 			})
 			.catch(error => {
+				this.setState({ dataError: false });
 				console.log(error);
 			});
 	}
@@ -93,7 +133,8 @@ class Search extends Component {
 			wind,
 			humidity,
 			lat,
-			lng
+			lng,
+			isMarkerShown
 		} = this.state;
 		return (
 			<div className='search'>
@@ -104,6 +145,7 @@ class Search extends Component {
 						placeholder='Search'
 						value={this.state.city}
 						onChange={this.updateInput}
+						style={{color: `${this.state.dataError ? 'black' : 'red'}`}}
 					/>
 					<button
 						className="search__btn btn btn-outline-primary my-2 my-sm-0"
@@ -115,7 +157,7 @@ class Search extends Component {
 				</form>
 				<i
 					className="location material-icons"
-					onClick={this.getDataByLocation}
+					onClick={this.getLocation}
 				>
         my_location
 				</i>
@@ -128,7 +170,16 @@ class Search extends Component {
 					wind={wind}
 					humidity={humidity}
 				/>
-				{/* <Map lat={lat} lng={lng}/> */}
+				<div className='map' >
+					<Map
+						lat={lat}
+						lng={lng}
+						isMarkerShown={isMarkerShown}
+						loadingElement={<div style={{ height: '100%' }} />}
+						containerElement={<div style={{ height: '400px' }} />}
+						mapElement={<div style={{ height: '100%' }} />}
+					/>
+				</div>
 			</div>
 		);
 	}

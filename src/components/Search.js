@@ -7,6 +7,7 @@ class Search extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			input: '',
 			city: '',
 			temp: '',
 			weatherId: '',
@@ -38,7 +39,7 @@ class Search extends Component {
 
 	updateInput(e) {
 		this.setState({
-			city: e.target.value
+			input: e.target.value
 		});
 	}
 
@@ -88,7 +89,7 @@ class Search extends Component {
 	getData (e) {
 		e.preventDefault();
 
-		return fetch(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.city}&appid=51ac1e71f3bb963bdf6c1efe8dd0e33a&units=metric`)
+		return fetch(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&appid=51ac1e71f3bb963bdf6c1efe8dd0e33a&units=metric`)
 			.then(response => {
 				if(!response.ok) {
 					throw Error(response.status);
@@ -136,7 +137,7 @@ class Search extends Component {
 						className="form-control mr-sm-2 form-signin__size"
 						type="search"
 						placeholder='Search'
-						value={city}
+						value={this.state.input}
 						onChange={this.updateInput}
 						style={{color: `${this.state.dataError ? 'red' : 'black'}`}}
 					/>

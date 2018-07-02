@@ -15,6 +15,8 @@ div:empty {
 
 .navbar-brand {
   font-size: 3rem;
+  margin: auto;
+  padding-right: 10px;
 }
 
 .search {
@@ -63,6 +65,17 @@ div:empty {
   height: 18rem;
 }
 
+.ccard__title {
+  position: relative;
+  overflow: auto;
+  margin: auto;
+}
+
+.ccard__header {
+  display: inline;
+  vertical-align: middle;
+}
+
 .form-signin__size {
   width: 15rem;
   margin: 0 auto;
@@ -81,9 +94,42 @@ div:empty {
 .list-group-item {
   font-size: 1.5em;
   height: 4rem;
+  text-align: center;
 }
 
 .map {
   padding-top: 20px;
   padding-bottom: 20px;
+}
+
+.loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 8.125rem;
+  width: 8.125rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader__svg {
+  height: 6.25rem;
+  width: 6.25rem;
+}
+
+.favorite__icon {
+  color: rgba(255, 217, 0, 0.815);
+  font-size: 36px;
+}
+
+.navbar-text__favorites {
+  font-size: 1.5rem;
+}
+
+.navbar-text__favorites:hover {
+  text-decoration: underline;
 }

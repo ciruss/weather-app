@@ -2,33 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CurrentWeather from './CurrentWeather';
 
-
 class Weather extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			newCity: '',
 			forecast: [],
 			city: '',
 			cityId: '',
-			localCitys: [],
 			isHidden: true,
 		};
 
 		this.getForecast = this.getForecast.bind(this);
-		this.addItem = this.addItem.bind(this);
-	}
-
-	componentWillMount() {
-		localStorage.getItem('favoriteCitys') && this.setState({
-			localCitys: JSON.parse(localStorage.getItem('favoriteCitys'))
-		});
-	}
-
-	componentWillUpdate(nextState) {
-		if(this.state.newCity === nextState.newCity) {
-			localStorage.setItem('favoriteCitys', JSON.stringify(nextState.localCitys));
-		}
 	}
 
 	componentDidUpdate(prevProps) {
@@ -38,22 +22,6 @@ class Weather extends Component {
 			});
 			this.getForecast();
 		}
-	}
-
-	addItem() {
-		const newCity = {
-			id: this.state.cityId,
-			value: this.props.city
-		};
-
-		const localCitys = [...this.state.localCitys];
-
-		localCitys.push(newCity);
-
-		this.setState({
-			newCity: '',
-			localCitys,
-		});
 	}
 
 	getForecast () {
@@ -74,11 +42,6 @@ class Weather extends Component {
 			});
 	}
 
-	/* 	addToFavorites () {
-		if (this.state.localCitys !== [])
-			localStorage.setItem('citys', JSON.stringify({ cityId: this.state.city}));
-	} */
-
 	render() {
 		const { city, temp, weatherId, description, wind, humidity } = this.props;
 		return (
@@ -93,19 +56,16 @@ class Weather extends Component {
 						humidity={humidity}
 					/>}
 				<div className='forecast forecast__border'>
-					{this.state.forecast.map((item, index) =>
-						<div className="ccard forecast__border">
-							<div className="container">
-								<img key={index} src={`http://openweathermap.org/img/w/${item.weather[0].icon}.png`} />
+					{this.state.forecast.map(item =>
+						<div key={item.dt} className="ccard forecast__border">
+							<div key={item.dt} className="container">
+								<img key={item.dt} src={`http://openweathermap.org/img/w/${item.weather[0].icon}.png`} alt='weathericon' />
 								<h4>{Math.round(item.main.temp)} &#8451;</h4>
 								<p>{item.dt_txt.slice(5, 16)}</p>
 							</div>
 						</div>
 					)}
-				</div>{/*
-				<button onClick={this.addItem}>
-					Click away
-				</button> */}
+				</div>
 			</div>
 		);
 	}

@@ -3,6 +3,9 @@ import Weather from './Weather';
 import Map from './Map';
 import Loader from './Loader';
 
+const APIUrl = 'http://api.openweathermap.org/data/2.5/';
+const APIKey = 'appid=51ac1e71f3bb963bdf6c1efe8dd0e33a';
+
 class Search extends Component {
 	constructor(props) {
 		super(props);
@@ -61,7 +64,7 @@ class Search extends Component {
 	}
 
 	getDataByLocation() {
-		return fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${this.state.lat}&lon=${this.state.lng}&appid=51ac1e71f3bb963bdf6c1efe8dd0e33a&units=metric`)
+		return fetch(`${APIUrl}weather?lat=${this.state.lat}&lon=${this.state.lng}&${APIKey}&units=metric`)
 			.then(response => {
 				if(!response.ok) {
 					throw Error(response.status);
@@ -89,7 +92,7 @@ class Search extends Component {
 	getData (e) {
 		e.preventDefault();
 
-		return fetch(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&appid=51ac1e71f3bb963bdf6c1efe8dd0e33a&units=metric`)
+		return fetch(`${APIUrl}/weather?q=${this.state.input}&${APIKey}&units=metric`)
 			.then(response => {
 				if(!response.ok) {
 					throw Error(response.status);
@@ -109,6 +112,7 @@ class Search extends Component {
 					submit: !this.state.submit,
 					isMarkerShown: true,
 					dataError: false,
+					input: ''
 				});
 			})
 			.catch(error => {

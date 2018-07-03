@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CurrentWeather from './CurrentWeather';
 
+const APIUrl = 'http://api.openweathermap.org/data/2.5/';
+const APIKey = 'appid=51ac1e71f3bb963bdf6c1efe8dd0e33a';
+
 class Weather extends Component {
 	constructor(props) {
 		super(props);
@@ -25,7 +28,7 @@ class Weather extends Component {
 	}
 
 	getForecast () {
-		return fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${this.props.city}&appid=51ac1e71f3bb963bdf6c1efe8dd0e33a&units=metric`)
+		return fetch(`${APIUrl}/forecast?q=${this.props.city}&${APIKey}&units=metric`)
 			.then(response => {
 				if(!response.ok) {
 					throw Error(response.status);

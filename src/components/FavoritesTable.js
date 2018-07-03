@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Collapse } from 'react-collapse';
 import CurrentWeather from './CurrentWeather';
 
+const APIUrl = 'http://api.openweathermap.org/data/2.5/';
+const APIKey = 'appid=51ac1e71f3bb963bdf6c1efe8dd0e33a';
 
 class FavoritesTable extends Component {
 	constructor(props) {
@@ -33,7 +35,7 @@ class FavoritesTable extends Component {
 	}
 
 	getCurrentWeather(value) {
-		return fetch(`http://api.openweathermap.org/data/2.5/weather?q=${value}&appid=51ac1e71f3bb963bdf6c1efe8dd0e33a&units=metric`)
+		return fetch(`${APIUrl}/weather?q=${value}&${APIKey}&units=metric`)
 			.then(response => {
 				if(!response.ok) {
 					throw Error(response.status);
@@ -71,26 +73,26 @@ class FavoritesTable extends Component {
 		} = this.state;
 		return (
 			<div className='favorites'>
-				<ul className="list-group">
-					{this.state.favorites.map((name, index) =>
-						<li
-							key={index}
-							className='list-group-item'
-							onClick={() => this.getCurrentWeather(name)}
-						>
-							{name}
-							<button onClick={() => this.deleteItem(name)}>-</button>
-							{/* <CurrentWeather
+				{this.state.favorites.map((city, index) =>
+					<span
+						className='favorites'
+						key={index}
+						onClick={() => this.getCurrentWeather(city)}
+					>
+						{city}
+						<button onClick={() => this.deleteItem(city)}>-</button>
+						<div className='favorites__weather'>
+							<CurrentWeather
 								cityName={cityName}
 								temp={temp}
 								weatherId={weatherId}
 								description={description}
 								wind={wind}
 								humidity={humidity}
-							/> */}
-						</li>
-					)}
-				</ul>
+							/>
+						</div>
+					</span>
+				)}
 			</div>
 		);
 	}

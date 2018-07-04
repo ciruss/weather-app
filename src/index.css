@@ -134,3 +134,11 @@ div:empty {
 .navbar-text__favorites:hover {
   text-decoration: underline;
 }
+
+.btn__location {
+  border: none !important;
+}
+
+.btn__location:focus {
+  outline: 0;
+}

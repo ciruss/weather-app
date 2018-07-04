@@ -46,17 +46,11 @@ class Weather extends Component {
 	}
 
 	render() {
-		const { city, temp, weatherId, description, wind, humidity } = this.props;
 		return (
 			<div>
 				{this.state.isHidden ? null :
 					<CurrentWeather
-						temp={temp}
-						city={city}
-						weatherId={weatherId}
-						description={description}
-						wind={wind}
-						humidity={humidity}
+						{...this.props}
 					/>}
 				<div className='forecast forecast__border'>
 					{this.state.forecast.map(item =>

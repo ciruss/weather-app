@@ -31,22 +31,15 @@ class Search extends Component {
 		this.getLocation = this.getLocation.bind(this);
 	}
 
-	componentDidMount() {
-		navigator.geolocation.getCurrentPosition(
-			position => {
-				this.setState({ lat: position.coords.latitude, lng: position.coords.longitude});
-			},
-			error => console.log(error)
-		);
-	}
-
 	updateInput(e) {
 		this.setState({
 			input: e.target.value
 		});
 	}
 
-	getLocation() {
+	getLocation(e) {
+		e.preventDefault();
+
 		this.setState({ isLoading: true });
 		if(navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
@@ -122,18 +115,6 @@ class Search extends Component {
 	}
 
 	render() {
-		const { temp,
-			weatherId,
-			city,
-			submit,
-			description,
-			wind,
-			humidity,
-			lat,
-			lng,
-			isMarkerShown,
-			isLoading
-		} = this.state;
 		return (
 			<div className='search'>
 				<form className="form-signin my-2 my-lg-0">
@@ -151,34 +132,28 @@ class Search extends Component {
 						onClick={this.getData}
 					>
           Search
+					</button><br/>
+					<button className='btn__location'>
+						<i
+							className="location material-icons"
+							onClick={this.getLocation}
+						>
+        			my_location
+						</i>
 					</button>
 				</form>
-				<i
-					className="location material-icons"
-					onClick={this.getLocation}
-				>
-        my_location
-				</i>
 				<Weather
-					temp={temp}
-					weatherId={weatherId}
-					city={city}
-					submit={submit}
-					description={description}
-					wind={wind}
-					humidity={humidity}
+					{...this.state}
 				/>
 				<div className='map' >
-					{isMarkerShown ? <Map
-						lat={lat}
-						lng={lng}
-						isMarkerShown={isMarkerShown}
+					{this.state.isMarkerShown ? <Map
+						{...this.state}
 						loadingElement={<div style={{ height: '100%' }} />}
 						containerElement={<div style={{ height: '400px' }} />}
 						mapElement={<div style={{ height: '100%' }} />}
 					/> : null}
 				</div>
-				{isLoading && <Loader />}
+				{this.state.isLoading && <Loader />}
 			</div>
 		);
 	}

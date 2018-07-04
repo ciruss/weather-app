@@ -137,6 +137,11 @@ div:empty {
 
 .btn__location {
   border: none !important;
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  cursor:pointer;
+  overflow: hidden;
+  outline:none;
 }
 
 .btn__location:focus {

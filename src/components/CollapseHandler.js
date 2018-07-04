@@ -12,6 +12,7 @@ class CollapseHandler extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			favorites: JSON.parse(localStorage.getItem('favoriteCitys')) || [],
 			isOpened: false,
 			weatherId: '',
 			temp: '',
@@ -21,6 +22,12 @@ class CollapseHandler extends Component {
 		};
 		this.toggle = this.toggle.bind(this);
 		this.getCurrentWeather = this.getCurrentWeather.bind(this);
+	}
+
+	componentDidUpdate(prevState) {
+		if(this.state.favorites !== prevState.favorites) {
+			localStorage.setItem('favoriteCitys', JSON.stringify(this.state.favorites));
+		}
 	}
 
 	toggle() {
@@ -36,6 +43,7 @@ class CollapseHandler extends Component {
 				return response.json();
 			})
 			.then(data => {
+				console.log(value);
 				this.setState({
 					weatherId: data.weather[0].icon,
 					temp: data.main.temp,
@@ -50,34 +58,23 @@ class CollapseHandler extends Component {
 	}
 
 	render() {
-		const { temp,
-			weatherId,
-			description,
-			wind,
-			humidity,
-		} = this.state;
-		const favorite = this.props;
+		// const favorite = this.props;
 		return (
-			<ListGroupItem>
-				<div>
-					<p onClick={this.toggle}>
-						<strong>favorite</strong>
-					</p>
-					<Collapse
-						isOpen={this.state.isOpened}
-						onClick={this.getCurrentWeather(this.props.favorite)}
-					>
-						<CurrentWeather
-							cityName={favorite}
-							temp={temp}
-							weatherId={weatherId}
-							description={description}
-							wind={wind}
-							humidity={humidity}
-						/>
-					</Collapse>
-				</div>
-			</ListGroupItem>
+			<div>
+				<h4 onClick={this.toggle}>
+					<strong
+						onClick={() => this.getCurrentWeather(this.props.favorite)}
+					>{this.props.favorite}</strong>
+				</h4>
+				<Collapse
+					isOpen={this.state.isOpened}
+				>
+					<CurrentWeather
+						city={this.props.favorite}
+						{...this.state}
+					/>
+				</Collapse>
+			</div>
 		);
 	}
 }

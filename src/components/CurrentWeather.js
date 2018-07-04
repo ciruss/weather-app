@@ -5,18 +5,18 @@ class CurrentWeather extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			favorites: [],
+			favorites: JSON.parse(localStorage.getItem('favoriteCitys')) || [],
 		};
 
 		this.addItem = this.addItem.bind(this);
 		this.deleteItem = this.deleteItem.bind(this);
 	}
 
-	componentDidMount() {
+	/* componentDidMount() {
 		localStorage.getItem('favoriteCitys') && this.setState({
 			favorites: JSON.parse(localStorage.getItem('favoriteCitys'))
 		});
-	}
+	} */
 
 	componentDidUpdate(prevState) {
 		if(this.state.favorites !== prevState.favorites) {

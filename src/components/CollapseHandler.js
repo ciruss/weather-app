@@ -43,7 +43,6 @@ class CollapseHandler extends Component {
 				return response.json();
 			})
 			.then(data => {
-				console.log(value);
 				this.setState({
 					weatherId: data.weather[0].icon,
 					temp: data.main.temp,

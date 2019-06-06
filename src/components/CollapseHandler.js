@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 
 import CurrentWeather from './CurrentWeather';
 
-const APIUrl = 'http://api.openweathermap.org/data/2.5/';
-const APIKey = 'appid=51ac1e71f3bb963bdf6c1efe8dd0e33a';
+const API_KEY = process.env.REACT_APP_API_KEY;
+const API_URL = process.env.REACT_APP_API_URL;
 
 class CollapseHandler extends Component {
 	constructor(props) {
@@ -25,8 +25,11 @@ class CollapseHandler extends Component {
 	}
 
 	componentDidUpdate(prevState) {
-		if(this.state.favorites !== prevState.favorites) {
-			localStorage.setItem('favoriteCitys', JSON.stringify(this.state.favorites));
+		if (this.state.favorites !== prevState.favorites) {
+			localStorage.setItem(
+				'favoriteCitys',
+				JSON.stringify(this.state.favorites),
+			);
 		}
 	}
 
@@ -35,15 +38,15 @@ class CollapseHandler extends Component {
 	}
 
 	getCurrentWeather(value) {
-		return fetch(`${APIUrl}/weather?q=${value}&${APIKey}&units=metric`)
-			.then(response => {
-				if(!response.ok) {
-					throw Error(response.status);
+		return fetch(`${API_URL}/weather?q=${value}&${API_KEY}&units=metric`)
+			.then(res => {
+				if (!res.ok) {
+					throw Error(res.status);
 				}
-				return response.json();
+				console.log(res);
+				return res.json();
 			})
 			.then(data => {
-				console.log(value);
 				this.setState({
 					weatherId: data.weather[0].icon,
 					temp: data.main.temp,
@@ -53,26 +56,22 @@ class CollapseHandler extends Component {
 				});
 			})
 			.catch(error => {
-				console.log(error);
+				throw new Error(error);
 			});
 	}
 
 	render() {
-		// const favorite = this.props;
+		const { isOpened } = this.state;
+		const { favorite } = this.props;
 		return (
 			<div>
 				<h4 onClick={this.toggle}>
-					<strong
-						onClick={() => this.getCurrentWeather(this.props.favorite)}
-					>{this.props.favorite}</strong>
+					<strong onClick={() => this.getCurrentWeather(favorite)}>
+						{favorite}
+					</strong>
 				</h4>
-				<Collapse
-					isOpen={this.state.isOpened}
-				>
-					<CurrentWeather
-						city={this.props.favorite}
-						{...this.state}
-					/>
+				<Collapse isOpen={isOpened}>
+					<CurrentWeather city={favorite} {...this.state} />
 				</Collapse>
 			</div>
 		);
@@ -80,7 +79,7 @@ class CollapseHandler extends Component {
 }
 
 CollapseHandler.propTypes = {
-	favorite: PropTypes.string.isRequired
+	favorite: PropTypes.string.isRequired,
 };
 
 export default CollapseHandler;

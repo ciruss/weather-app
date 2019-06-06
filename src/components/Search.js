@@ -3,63 +3,59 @@ import Weather from './Weather';
 import Map from './Map';
 import Loader from './Loader';
 
-const APIUrl = 'http://api.openweathermap.org/data/2.5/';
-const APIKey = 'appid=51ac1e71f3bb963bdf6c1efe8dd0e33a';
+const API_KEY = process.env.REACT_APP_API_KEY;
+const API_URL = process.env.REACT_APP_API_URL;
 
 class Search extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			input: '',
-			city: '',
-			temp: '',
-			weatherId: '',
-			submit: false,
-			lat: 0,
-			lng: 0,
-			description: '',
-			wind: '',
-			humidity: '',
-			isMarkerShown: false,
-			dataError: false,
-			isLoading: false,
-		};
+	state = {
+		input: '',
+		city: '',
+		temp: '',
+		weatherId: '',
+		submit: false,
+		lat: 0,
+		lng: 0,
+		description: '',
+		wind: '',
+		humidity: '',
+		isMarkerShown: false,
+		dataError: false,
+		isLoading: false,
+	};
 
-		this.updateInput = this.updateInput.bind(this);
-		this.getData = this.getData.bind(this);
-		this.getDataByLocation = this.getDataByLocation.bind(this);
-		this.getLocation = this.getLocation.bind(this);
-	}
-
-	updateInput(e) {
+	updateInput = e => {
 		this.setState({
-			input: e.target.value
+			input: e.target.value,
 		});
-	}
+	};
 
-	getLocation(e) {
+	getLocation = e => {
 		e.preventDefault();
 
 		this.setState({ isLoading: true });
-		if(navigator.geolocation) {
+		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(
 				position => {
 					this.setState({
 						lat: position.coords.latitude,
-						lng: position.coords.longitude
+						lng: position.coords.longitude,
 					});
 					this.getDataByLocation();
 					this.setState({ isLoading: false });
 				},
-				error => console.log(error)
+				error => console.log(error),
 			);
 		}
-	}
+	};
 
-	getDataByLocation() {
-		return fetch(`${APIUrl}weather?lat=${this.state.lat}&lon=${this.state.lng}&${APIKey}&units=metric`)
+	getDataByLocation = () => {
+		return fetch(
+			`${API_URL}weather?lat=${this.state.lat}&lon=${
+				this.state.lng
+			}&${API_KEY}&units=metric`,
+		)
 			.then(response => {
-				if(!response.ok) {
+				if (!response.ok) {
 					throw Error(response.status);
 				}
 				return response.json();
@@ -74,23 +70,25 @@ class Search extends Component {
 					humidity: data.main.humidity,
 					submit: !this.state.submit,
 					isMarkerShown: true,
-					dataError: false
+					dataError: false,
 				});
 			})
 			.catch(error => {
 				console.log(error);
 			});
-	}
+	};
 
-	getData (e) {
+	getData = e => {
 		e.preventDefault();
 
-		return fetch(`${APIUrl}/weather?q=${this.state.input}&${APIKey}&units=metric`)
-			.then(response => {
-				if(!response.ok) {
-					throw Error(response.status);
+		return fetch(
+			`${API_URL}/weather?q=${this.state.input}&${API_KEY}&units=metric`,
+		)
+			.then(res => {
+				if (!res.ok) {
+					throw Error(res.status);
 				}
-				return response.json();
+				return res.json();
 			})
 			.then(data => {
 				this.setState({
@@ -105,55 +103,65 @@ class Search extends Component {
 					submit: !this.state.submit,
 					isMarkerShown: true,
 					dataError: false,
-					input: ''
+					input: '',
 				});
 			})
 			.catch(error => {
 				this.setState({ dataError: true });
 				console.log(error);
 			});
-	}
+	};
 
 	render() {
+		const {
+			input,
+			dataError,
+			isMarkerShown,
+			isLoading,
+			...rest
+		} = this.state;
 		return (
-			<div className='search'>
+			<div className="search">
 				<form className="form-signin my-2 my-lg-0">
 					<input
 						className="form-control mr-sm-2 form-signin__size"
 						type="search"
-						placeholder='Search'
-						value={this.state.input}
+						placeholder="Search"
+						value={input}
 						onChange={this.updateInput}
-						style={{color: `${this.state.dataError ? 'red' : 'black'}`}}
+						style={{ color: `${dataError ? 'red' : 'black'}` }}
 					/>
 					<button
 						className="search__btn btn btn-outline-primary my-2 my-sm-0"
 						type="submit"
 						onClick={this.getData}
 					>
-          Search
-					</button><br/>
-					<button className='btn__location'>
+						Search
+					</button>
+					<br />
+					<button className="btn__location">
 						<i
 							className="location material-icons"
 							onClick={this.getLocation}
 						>
-        			my_location
+							my_location
 						</i>
 					</button>
 				</form>
-				<Weather
-					{...this.state}
-				/>
-				<div className='map' >
-					{this.state.isMarkerShown ? <Map
-						{...this.state}
-						loadingElement={<div style={{ height: '100%' }} />}
-						containerElement={<div style={{ height: '400px' }} />}
-						mapElement={<div style={{ height: '100%' }} />}
-					/> : null}
+				<Weather {...rest} />
+				<div className="map">
+					{isMarkerShown ? (
+						<Map
+							{...rest}
+							loadingElement={<div style={{ height: '100%' }} />}
+							containerElement={
+								<div style={{ height: '400px' }} />
+							}
+							mapElement={<div style={{ height: '100%' }} />}
+						/>
+					) : null}
 				</div>
-				{this.state.isLoading && <Loader />}
+				{isLoading && <Loader />}
 			</div>
 		);
 	}

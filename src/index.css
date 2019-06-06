@@ -147,3 +147,7 @@ div:empty {
 .btn__location:focus {
   outline: 0;
 }
+
+strong {
+  cursor: pointer;
+}

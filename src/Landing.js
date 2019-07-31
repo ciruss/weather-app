@@ -2,11 +2,19 @@ import React from 'react';
 import { Context } from './Context/Provider';
 
 const Landing = () => {
-    const { cityName } = React.useContext(Context);
+    const { cityName, addToFavorites } = React.useContext(Context);
+
     return (
         <>
             <h1>Landing</h1>
-            {cityName ? <p>{cityName}</p> : null}
+            {cityName ? (
+                <div>
+                    <span>{cityName}</span>
+                    <button onClick={() => addToFavorites(cityName)}>
+                        Add to Favorites
+                    </button>
+                </div>
+            ) : null}
         </>
     );
 };

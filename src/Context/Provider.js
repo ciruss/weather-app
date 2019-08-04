@@ -1,5 +1,6 @@
 import React from 'react';
 import { getFromLocalStorage, saveToLocalStorage } from '../utils';
+import { API_URL } from '../globals';
 
 export const Context = React.createContext();
 
@@ -8,6 +9,7 @@ const Provider = ({ children }) => {
     const [favorites, setFavorites] = React.useState(
         localStorage.favorites ? getFromLocalStorage('favorites') : [],
     );
+    const [currentWeather, setCurrentWeather] = React.useState();
 
     React.useEffect(() => {
         saveToLocalStorage('favorites', favorites);
@@ -31,6 +33,22 @@ const Provider = ({ children }) => {
         cityName,
     });
 
+    const getCurrentWeather = cityName => {
+        fetch(
+            `${API_URL}weather?q=${cityName}&units=metric&appid=${
+                process.env.REACT_APP_API_KEY
+            }`,
+        )
+            .then(response => response.json())
+            .then(data => setCurrentWeather(data))
+            .catch(e => console.log(e));
+    };
+
+    React.useEffect(() => {
+        if (cityName === '') return;
+        getCurrentWeather(cityName);
+    }, [cityName]);
+
     const value = {
         cityName,
         setCityName,
@@ -38,6 +56,8 @@ const Provider = ({ children }) => {
         setFavorites,
         addToFavorites,
         removeFromFavorites,
+        getCurrentWeather,
+        currentWeather,
     };
 
     return <Context.Provider value={value}>{children}</Context.Provider>;

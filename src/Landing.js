@@ -2,7 +2,9 @@ import React from 'react';
 import { Context } from './Context/Provider';
 
 const Landing = () => {
-    const { cityName, addToFavorites } = React.useContext(Context);
+    const { cityName, addToFavorites, currentWeather } = React.useContext(
+        Context,
+    );
 
     return (
         <>
@@ -13,6 +15,14 @@ const Landing = () => {
                     <button onClick={() => addToFavorites(cityName)}>
                         Add to Favorites
                     </button>
+                    <div className='weather'>
+                        {currentWeather && (
+                            <p>
+                                Temp:{' '}
+                                {Math.round(currentWeather.main.temp * 10) / 10}
+                            </p>
+                        )}
+                    </div>
                 </div>
             ) : null}
         </>

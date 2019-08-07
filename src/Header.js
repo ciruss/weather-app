@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import SearchBox from './SearchBox';
+import { Context } from './Context/Provider';
 
 const StyledHeader = styled.nav`
     display: flex;
@@ -26,18 +27,27 @@ const FavoritesLink = styled.span`
 
 const SearchContainer = styled.div``;
 
-const Header = () => (
-    <StyledHeader className='header'>
-        <Link to='/favorites'>
-            <FavoritesLink>Favorites</FavoritesLink>
-        </Link>
-        <Link to='/'>
-            <Title>My Weather</Title>
-        </Link>
-        <SearchContainer>
-            <SearchBox />
-        </SearchContainer>
-    </StyledHeader>
-);
+const Header = () => {
+    const { isMetric, setIsMetric } = React.useContext(Context);
+
+    const changeUnits = () => {
+        setIsMetric(!isMetric);
+    };
+
+    return (
+        <StyledHeader className="header">
+            <Link to="/favorites">
+                <FavoritesLink>Favorites</FavoritesLink>
+            </Link>
+            <Link to="/">
+                <Title>My Weather</Title>
+            </Link>
+            <SearchContainer>
+                <SearchBox />
+            </SearchContainer>
+            <button onClick={changeUnits}>Change to {isMetric ? 'Farenheit' : 'Metric'}</button>
+        </StyledHeader>
+    );
+};
 
 export default Header;

@@ -1,8 +1,19 @@
 import React from 'react';
 import { Context } from './Context/Provider';
+import { getCurrentWeather } from './utils';
 
 const Landing = () => {
-    const { cityName, addToFavorites, currentWeather } = React.useContext(Context);
+    const { cityName, addToFavorites, isMetric } = React.useContext(Context);
+    const [weather, setWeather] = React.useState();
+
+    React.useEffect(() => {
+        if (!cityName) return;
+        const saveWeatherInfo = async () => {
+            const info = await getCurrentWeather(cityName, isMetric);
+            return await setWeather(info);
+        };
+        saveWeatherInfo();
+    }, [cityName, isMetric]);
 
     return (
         <>
@@ -10,9 +21,13 @@ const Landing = () => {
             {cityName ? (
                 <div>
                     <span>{cityName}</span>
-                    <button onClick={() => addToFavorites(currentWeather.id, cityName)}>Add to Favorites</button>
+                    <button onClick={() => addToFavorites(weather.id, cityName)}>
+                        Add to Favorites
+                    </button>
                     <div className="weather">
-                        {currentWeather && <p>Temp: {Math.round(currentWeather.main.temp * 10) / 10}</p>}
+                        {weather && weather.main ? (
+                            <p>Temp: {Math.round(weather.main.temp * 10) / 10}</p>
+                        ) : null}
                     </div>
                 </div>
             ) : null}

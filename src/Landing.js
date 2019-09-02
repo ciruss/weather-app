@@ -11,7 +11,7 @@ const Landing = () => {
         if (!cityName) return;
         const saveWeatherInfo = async () => {
             const info = await getCurrentWeather(cityName, isMetric);
-            return await setWeather(info);
+            return setWeather(info);
         };
         saveWeatherInfo();
     }, [cityName, isMetric]);
@@ -19,22 +19,22 @@ const Landing = () => {
     return (
         <>
             <h1>Landing</h1>
-            {cityName ? (
+            {weather ? (
                 <div>
-                    <span>{cityName}</span>
+                    <span>{`${weather.name}, ${weather.sys.country}`}</span>
                     <button onClick={() => addToFavorites(weather.id, cityName)}>
                         Add to Favorites
                     </button>
                     <div className="weather">
-                        {weather && weather.main ? (
-                            <p>
-                                Temp: {Math.round(weather.main.temp * 10) / 10}{' '}
-                                <WeatherIcon iconCode={weather.weather[0].icon} />
-                            </p>
-                        ) : null}
+                        <p>
+                            Temp: {weather.main.temp.toFixed(1)}{' '}
+                            <WeatherIcon iconCode={weather.weather[0].icon} />
+                        </p>
                     </div>
                 </div>
-            ) : null}
+            ) : (
+                cityName && <span>Failed getting data</span>
+            )}
         </>
     );
 };

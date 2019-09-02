@@ -29,6 +29,7 @@ const SearchContainer = styled.div``;
 
 const SwitchWrapper = styled.div`
     position: relative;
+    display: flex;
 `;
 
 const SwitchLabel = styled.label`
@@ -99,7 +100,9 @@ const Header = () => {
                     checked={isMetric}
                     onChange={changeUnits}
                 />
-                <SwitchLabel htmlFor="temperature-switch" />
+                <SwitchLabel htmlFor="temperature-switch">
+                    <div data-checked="On" data-unchecked="Off" />
+                </SwitchLabel>
             </SwitchWrapper>
         </StyledHeader>
     );

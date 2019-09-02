@@ -2,6 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { Context } from './Context/Provider';
 import { getCurrentWeather } from './utils';
+import WeatherIcon from './WeatherIcon';
 
 const Favorite = ({ cityName, id, history }) => {
     const { removeFromFavorites, setCityName, isMetric } = React.useContext(Context);
@@ -11,7 +12,7 @@ const Favorite = ({ cityName, id, history }) => {
         if (!cityName) return;
         const saveWeatherInfo = async () => {
             const info = await getCurrentWeather(cityName, isMetric);
-            return await setWeather(info);
+            return setWeather(info);
         };
         saveWeatherInfo();
     }, [cityName, isMetric]);
@@ -24,7 +25,14 @@ const Favorite = ({ cityName, id, history }) => {
     return (
         <div>
             <span onClick={() => openDetailView(cityName)}>{cityName}</span>
-            {weather ? <p>{weather.main.temp}</p> : null}
+            {weather ? (
+                <p>
+                    {weather.main.temp.toFixed(1)}{' '}
+                    <WeatherIcon iconCode={weather.weather[0].icon} />
+                </p>
+            ) : (
+                <span>Failed to get data</span>
+            )}
             <button onClick={() => removeFromFavorites(id)}>Remove from favorites</button>
         </div>
     );
